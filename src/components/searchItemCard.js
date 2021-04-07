@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const ItemCard = ({ _id, product_name, image, description, price, category}) => {
+const SearchItemCard = ({ _id, product_name, image, description, price, category}) => {
     return(
         <Link style={{backgroundColor: "#ffffff", borderColor: "#b2bec3"}} className="border-2" to={`item/${_id}`}>
         <div className="rounded overflow-hidden shadow-lg">
@@ -21,4 +21,4 @@ const ItemCard = ({ _id, product_name, image, description, price, category}) => 
     )
 }
 
-export default ItemCard;
+export default SearchItemCard;

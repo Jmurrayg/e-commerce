@@ -1,80 +1,120 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, {useContext, useState} from 'react';
 import { Link } from 'react-router-dom';
 import payload from '../../utils/payload';
+import {ReactComponent as CartLogo} from '../../assets/shoppingCart.svg';
+import {SearchContext} from '../SearchBar/searchProvider';
+import {SearchTextContext} from '../SearchBar/searchTextProvider';
+import logo from '../../assets/rubber-duck.png'
+
+
 
 
 export default function Navbar(){
-
     const user = payload();
+    const [text,setText] = useState("");
+    const [search , setSearch] = useContext(SearchContext);
+    const [searchText, setSearchText] = useContext(SearchTextContext);
+    let result = [];
+    
+
+    
+    
+    const searchItems = () =>{
+
+        if(result.length < 0){
+            // eslint-disable-next-line array-callback-return
+            return search.map(e => {
+                if(e.product_name.includes(text)){
+                    result.push(e);
+                    console.log(result);
+                }
+            })
+        }else {
+            result = [];
+            // eslint-disable-next-line array-callback-return
+            return search.map(e => {
+                if(e.product_name.includes(text)){
+                    result.push(e);
+                }
+            })
+        }
+    }
+    async function passData(){
+        console.log('esperando');
+        await searchItems();
+        console.log(result, 'termine');
+        setSearchText(result);
+
+
+    }
+
 
 
     return(
-        <nav className="bg-gray-800">
-          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div className="relative flex items-center justify-between h-16">
-{/*               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                burger button 
-                <button type="button" className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-                  <span className="sr-only">Open main menu</span>
+      <header className=" md:flex md:items-center md:justify-between p-4 pr-20 pb-0 md:pb-4"
+      style={{backgroundColor: "#2f3640"}}>
+      <div className="flex items-center justify-between mb-4 md:mb-0">
+      <img src={logo} className="w-11" alt="Logo" />
+          <h1 className="leading-none text-2xl text-white">
+          <Link className="no-underline text-white hover:text-black" to="/">
+          Golden Duckling Store
+          </Link>
+          </h1>
 
-                  <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                  <svg className="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div> */}
-              <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex-shrink-0 flex items-center">
-                  <img className="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow"/>
-                  <img className="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg" alt="Workflow"/>
-                </div>
-                <div className="hidden sm:block sm:ml-6">
-                  {user 
-                  ? 
-                  <div className="flex space-x-4">
-                    <Link to="/" className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Inicio</Link>
-                      {
-                        user.role === "ADMIN"
-                        ? <Link className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium" to="/add">Agregar Item</Link>
-                        : ''
-                      }
-                    <Link to="/logout" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Cerrar Sesión</Link>
-                  </div>
-                  :
-                  <div className="flex space-x-4">
-                    <Link to="/" className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Inicio</Link>
-                    <Link to="/login" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</Link>
-                    <Link to="/signup" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Registro</Link>
-                  </div>
-                  }
-                </div>
-              </div>
-              {user 
+          <Link className="text-black hover:text-orange md:hidden" to="#">
+          <i className="fa fa-2x fa-bars"></i>
+          </Link>
+      </div>
+      <div className="flex mb-4 w-full md:mb-0 md:w-1/4">
+          <label className="hidden" for="search-form">Search</label>
+          <input onChange={(evento) => setText(evento.target.value)} className="bg-grey-lightest border-2 focus:border-orange p-2 rounded-lg shadow-inner w-full" placeholder="Search" type="text"/>
+          <button className="w-1/3 ml-3 text-white bg-indigo-500 rounded-md focus:bg-indigo-600 focus:outline-none" onClick={passData} >Buscar</button>
+      </div>
+      <nav>
+              {
+              user
               ?
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <div className="ml-3 relative">
-                  <div>
-                    <button type="button" className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
-                      <span className="sr-only">Open user menu</span>
-                      <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
-                    </button>
+              <ul className="list-reset md:flex md:items-center">
+              <Link to="/cart"><CartLogo/></Link>
+              <div className="md:ml-4">
+                  <div className="dropdown inline-block ml-3 relative">
+                      <button type="button" className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
+                          <span className="sr-only">Open user menu</span>
+                        {
+                            user.profile_img
+                            ?<img className="h-8 w-8 rounded-full" src={user.profile_img} alt=""/>
+                            :<img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
+                        }
+                      </button>
+                      <ul className="dropdown-menu absolute hidden text-gray-700 pt-1">
+                      {
+                          user.role === "ADMIN"
+                          ?<li className=""><Link className="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" to="/add">Agregar Item</Link></li>
+                          :""
+                      }
+                          <li className=""><Link className="rounded-b bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" to="/logout">Logout</Link></li>
+                      </ul>
                   </div>
-                </div>
               </div>
-              :''
+              </ul>
+              :
+              <ul className="list-reset md:flex md:items-center">
+              <li className="md:ml-4">
+                  <Link className="block no-underline hover:underline py-2 text-white hover:text-black md:border-none md:p-0" to="/login">
+                  Login
+                  </Link>
+              </li>
+              <li className="md:ml-4">
+                  <Link className="border-t block no-underline hover:underline py-2 text-white hover:text-black md:border-none md:p-0" to="/signup">
+                  Registro
+                  </Link>
+              </li>
+              </ul>
               }
-
-            </div>
-          </div>
-          <div className="sm:hidden" id="mobile-menu">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link to="/" className="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Inicio</Link>
-              <Link to="/login" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Login</Link>
-              <Link to="/signup" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Registro</Link>
-            </div>
-          </div>
-        </nav>
+      </nav>
+  </header>
     )
 }
+
+

@@ -7,7 +7,6 @@ export default function() {
         const [header, payload, signature] = token.split('.');
         const base64 = payload.replace('-','+').replace('_', '/');
         const payloadObject = JSON.parse(window.atob(base64));
-        console.log(payloadObject);
         return payloadObject;
     } else {
         null
